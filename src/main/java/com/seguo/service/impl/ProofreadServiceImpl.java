@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProofreadServiceImpl implements ProofreadService {
     @Autowired
@@ -24,5 +26,10 @@ public class ProofreadServiceImpl implements ProofreadService {
     @Override
     public void destroy(Long id) {
         this.collectionRepository.deleteById(id);
+    }
+
+    @Override
+    public void destroyAllById(List<Long> ids) {
+        this.collectionRepository.deleteAllById(ids);
     }
 }

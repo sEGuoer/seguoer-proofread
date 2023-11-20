@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller("backendProofread")
@@ -32,5 +33,12 @@ public class ProofreadController {
     String destroy(@PathVariable Long id) {
         proofreadService.destroy(id);
         return "redirect:/admin/collections";
+    }
+
+    @DeleteMapping("destroy")
+    @ResponseBody
+    String destroyBatch(@RequestParam(value = "ids[]") List<Long> ids) {
+        proofreadService.destroyAllById(ids);
+        return "DONE";
     }
 }
