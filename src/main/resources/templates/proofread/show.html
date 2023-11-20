@@ -1,0 +1,21 @@
+<div th:replace="~{ app :: layout ('博客校对', ~{::#bsCss}, ~{::#main_content}) }" xmlns:th="http://www.thymeleaf.org">
+    <link id=bsCss href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <div class="single-post container" id="main_content">
+        <div class="row">
+            <div class="">
+                <h1 class="title">Title</h1>
+                <div class="list-group" th:each="blogFragment, stats:${blog}">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Little Title</h5>
+                            <small class="text-body-secondary">3 days ago</small>
+                        </div>
+                        <p class="mb-1" th:text="${blogFragment.toString()}"></p>
+                        <small class="text-body-secondary">And some muted small print.</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
