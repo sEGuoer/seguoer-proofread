@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,5 +26,11 @@ public class ProofreadController {
         Page<Collection> pageContent = proofreadService.findAll(currentPage, pageSize);
         model.addAttribute("page", pageContent);
         return "backend/collection/index";
+    }
+
+    @DeleteMapping("destroy/{id}")
+    String destroy(@PathVariable Long id) {
+        proofreadService.destroy(id);
+        return "redirect:/admin/collections";
     }
 }

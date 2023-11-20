@@ -20,4 +20,9 @@ public class ProofreadServiceImpl implements ProofreadService {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by("id").descending());
         return this.collectionRepository.findAll(pageable);
     }
+
+    @Override
+    public void destroy(Long id) {
+        this.collectionRepository.deleteById(id);
+    }
 }

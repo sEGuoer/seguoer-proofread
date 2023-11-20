@@ -2,12 +2,17 @@ package com.seguo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class User {
     @Id
@@ -19,6 +24,10 @@ public class User {
     private String phone;
     private LocalDateTime createdAt;
     private boolean enabled;
+
+    public User(Long id) {
+        this.id = id;
+    }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
