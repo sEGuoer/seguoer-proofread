@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh" th:fragment="layout(title, css, main_content)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="zh" th:fragment="layout(title, css, main_content, js)" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -134,7 +134,7 @@
 <script src="../../static/vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js" th:src="@{../vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <!-- AdminLTE App -->
 <script src="../../static/vendor/adminlte/dist/js/adminlte.min.js" th:src="@{../vendor/adminlte/dist/js/adminlte.min.js}"></script>
-
+<th:block th:replace="${js}" />
 </body>
 </html>
 
