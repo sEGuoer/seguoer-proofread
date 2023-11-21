@@ -78,4 +78,26 @@ class CollectionControllerTest {
         List<Collection> allById = collectionRepository.findAllById(ids);
         Assertions.assertTrue(allById.isEmpty());
     }
+
+    @Test
+    void store(@Autowired CollectionRepository collectionRepository) throws Exception {
+        String title = "title-" + UUID.randomUUID();
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/admin/collections/store")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("title", title)
+                        .param("slug", UUID.randomUUID().toString())
+                        .param("type", "doc")
+                        .param("description", "content-" + UUID.randomUUID())
+                        .param("user_id", "1")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"))
+        ;
+
+        Optional<Collection> co = collectionRepository.findFirstByTitle(title);
+        Assertions.assertTrue(co.isPresent());
+
+        collectionRepository.delete(co.get());
+    }
 }

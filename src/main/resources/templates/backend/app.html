@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${title}">app</title>
     <!-- Google Font: Source Sans Pro -->
-    <link href="../../static/vendor/adminlte/fonts/fonts.css" th:href="@{../vendor/adminlte/fonts/fonts.css}" rel="stylesheet">
+    <link href="../../static/vendor/adminlte/fonts/fonts.css" th:href="@{/vendor/adminlte/fonts/fonts.css}" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../static/vendor/adminlte/plugins/fontawesome-free/css/all.min.css" th:href="@{../vendor/adminlte/plugins/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" href="../../static/vendor/adminlte/plugins/fontawesome-free/css/all.min.css" th:href="@{/vendor/adminlte/plugins/fontawesome-free/css/all.min.css}">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../static/vendor/adminlte/dist/css/adminlte.min.css" th:href="@{../vendor/adminlte/dist/css/adminlte.min.css}">
+    <link rel="stylesheet" href="../../static/vendor/adminlte/dist/css/adminlte.min.css" th:href="@{/vendor/adminlte/dist/css/adminlte.min.css}">
     <th:block th:replace="${css}" />
 </head>
 <body class="hold-transition sidebar-mini">
@@ -54,13 +54,13 @@
             </li>
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="../img/default-avatar.png" th:src="@{/img/default-avatar.png}" class="user-image img-circle elevation-2" alt="User Image">
+                    <img src="../../static/img/default-avatar.png" th:src="@{/img/default-avatar.png}" class="user-image img-circle elevation-2" alt="User Image">
                     <span sec:authentication="name" class="d-none d-md-inline">xx_name</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
                     <!-- User image -->
                     <li class="user-header bg-gray-light">
-                        <img src="../img/default-avatar.png" th:src="@{/img/default-avatar.png}" class="img-circle elevation-2" alt="User Image">
+                        <img src="../../static/img/default-avatar.png" th:src="@{/img/default-avatar.png}" class="img-circle elevation-2" alt="User Image">
                         <p sec:authentication="name">
                             xx_name
                         </p>
@@ -84,7 +84,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
         <a href="#" target="_blank" class="brand-link">
-            <img src="../img/logo-short.svg" alt="example"
+            <img src="../../static/img/logo-short.svg" th:src="@{/img/default-avatar.png}" alt="example"
                  class="brand-image mr-3">
             <span class="brand-text font-weight-light">Demo</span>
         </a>
@@ -129,11 +129,11 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="../../static/vendor/adminlte/plugins/jquery/jquery.min.js" th:src="@{../vendor/adminlte/plugins/jquery/jquery.min.js}"></script>
+<script src="../../static/vendor/adminlte/plugins/jquery/jquery.min.js" th:src="@{/vendor/adminlte/plugins/jquery/jquery.min.js}"></script>
 <!-- Bootstrap 4 -->
 <script src="../../static/vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js" th:src="@{../vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <!-- AdminLTE App -->
-<script src="../../static/vendor/adminlte/dist/js/adminlte.min.js" th:src="@{../vendor/adminlte/dist/js/adminlte.min.js}"></script>
+<script src="../../static/vendor/adminlte/dist/js/adminlte.min.js" th:src="@{/vendor/adminlte/dist/js/adminlte.min.js}"></script>
 <th:block th:replace="${js}" />
 </body>
 </html>

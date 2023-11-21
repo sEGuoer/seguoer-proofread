@@ -1,12 +1,15 @@
 package com.seguo.controller.backend;
 
 
+import com.seguo.dto.CollectionDto;
 import com.seguo.entity.Collection;
 import com.seguo.service.ProofreadService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,5 +43,21 @@ public class ProofreadController {
     String destroyBatch(@RequestParam(value = "ids[]") List<Long> ids) {
         proofreadService.destroyAllById(ids);
         return "DONE";
+    }
+
+    @GetMapping("create")
+    String create(Model model) {
+        model.addAttribute("collection", new Collection());
+        return "backend/collection/create";
+    }
+
+    @PostMapping("store")
+    String store(@Valid @ModelAttribute("collection") CollectionDto collectionDto,
+                 BindingResult result) {
+        if (result.hasErrors()) {
+            return "backend/collection/create";
+        }
+        proofreadService.save(collectionDto);
+        return "redirect:/admin/collections";
     }
 }

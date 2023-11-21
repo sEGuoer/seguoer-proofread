@@ -1,5 +1,6 @@
 package com.seguo.service;
 
+import com.seguo.dto.CollectionDto;
 import com.seguo.entity.Collection;
 import org.springframework.data.domain.Page;
 
@@ -11,4 +12,7 @@ public interface ProofreadService {
     void destroy(Long id);
 
     void destroyAllById(List<Long> ids);
+
+    void save(CollectionDto collectionDto);
+
 }
