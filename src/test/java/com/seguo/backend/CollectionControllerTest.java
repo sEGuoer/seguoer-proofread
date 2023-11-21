@@ -10,12 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +101,35 @@ class CollectionControllerTest {
 
         Optional<Collection> co = collectionRepository.findFirstByTitle(title);
         Assertions.assertTrue(co.isPresent());
+
+        collectionRepository.delete(co.get());
+    }
+
+    @Test
+    void storeWithCoverImage(@Autowired CollectionRepository collectionRepository, @Autowired Environment env) throws Exception {
+        String title = "title-" + UUID.randomUUID();
+        MockMultipartFile coverFile = new MockMultipartFile("coverFile", "cover.png", MediaType.IMAGE_PNG_VALUE, new byte[] { 1, 2, 3 });
+        mvc.perform(MockMvcRequestBuilders
+                        .multipart("/admin/collections/store")
+                        //.contentType(MediaType.MULTIPART_FORM_DATA)
+                        .file(coverFile)
+                        .param("id", "")
+                        .param("title", title)
+                        .param("slug", UUID.randomUUID().toString())
+                        .param("type", "doc")
+                        .param("description", "content-" + UUID.randomUUID())
+                        .param("user_id", "1")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"))
+        ;
+
+        Optional<Collection> co = collectionRepository.findFirstByTitle(title);
+        Assertions.assertTrue(co.isPresent());
+
+        String cover = co.get().getCover();
+        File coverOnDisk = new File(env.getProperty("custom.upload.base-path") + cover);
+        Assertions.assertTrue(Files.exists(coverOnDisk.toPath()));
+        Assertions.assertTrue(coverOnDisk.delete());
 
         collectionRepository.delete(co.get());
     }

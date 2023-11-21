@@ -6,14 +6,19 @@ import com.seguo.entity.Collection;
 import com.seguo.service.ProofreadService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller("backendProofread")
 @RequestMapping("/admin/collections")
@@ -52,12 +57,32 @@ public class ProofreadController {
     }
 
     @PostMapping("store")
-    String store(@Valid @ModelAttribute("collection") CollectionDto collectionDto,
-                 BindingResult result) {
+    String store(@RequestParam(value = "coverFile", required = false) MultipartFile file,@Valid @ModelAttribute("collection") CollectionDto collectionDto,
+                 BindingResult result) throws IOException {
         if (result.hasErrors()) {
             return "backend/collection/create";
         }
+        doCover(file,collectionDto);
         proofreadService.save(collectionDto);
         return "redirect:/admin/collections";
+    }
+
+    @Value("${custom.upload.base-path}")
+    String uploadBasePath;
+    @Value("${custom.upload.collection-cover-dir-under-base-path}")
+    String postCoverDirUnderBasePath;
+    private void doCover(MultipartFile file, CollectionDto collectionDto) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            File dir = new File(uploadBasePath + File.separator + postCoverDirUnderBasePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String originalFilename = file.getOriginalFilename();
+            assert originalFilename != null;
+            String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFilename = UUID.randomUUID() + suffix;
+            file.transferTo(new File(dir.getAbsolutePath() + File.separator + newFilename));
+            collectionDto.setCover("/" + postCoverDirUnderBasePath + File.separator + newFilename);
+        }
     }
 }
