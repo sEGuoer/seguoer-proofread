@@ -1,11 +1,11 @@
-<div th:replace="~{ backend/app :: layout ('Create New Collection', _, ~{::#main}, _) }" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{ backend/app :: layout ('Edit Collection', _, ~{::#main}, _) }" xmlns:th="http://www.thymeleaf.org">
   <div class="content-wrapper" id="main">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-12 d-flex justify-content-between">
-            <h1>Create New Collection</h1>
+            <h1>Edit Collection</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -17,10 +17,11 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <form id="post-form" method="post" action="#" th:action="@{/admin/collections/store}" enctype="multipart/form-data" th:object="${collection}">
+              <form id="post-form" method="post" action="#" th:action="@{/admin/collections/update}" enctype="multipart/form-data" th:object="${collection}">
+                <input type="hidden" name="_method" value="PUT">
                 <div th:replace="~{backend/collection/_form :: #collection-form}"></div>
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">保存</button>
+                  <button type="submit" class="btn btn-primary">更新</button>
                 </div>
               </form>
             </div>

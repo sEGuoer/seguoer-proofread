@@ -8,11 +8,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,5 +87,32 @@ public class ProofreadController {
             file.transferTo(new File(dir.getAbsolutePath() + File.separator + newFilename));
             collectionDto.setCover("/" + postCoverDirUnderBasePath + File.separator + newFilename);
         }
+    }
+
+    @GetMapping("edit/{id}")
+    String edit(@PathVariable Long id, Model model) {
+        Optional<Collection> optionalCollection = proofreadService.findById(id);
+        if (optionalCollection.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection Not Found");
+        } else {
+            Collection collection = optionalCollection.get();
+            model.addAttribute("collection", collection);
+            return "backend/collection/edit";
+        }
+    }
+
+    @PutMapping("update")
+    @PreAuthorize("#collectionDto.user_id == authentication.principal.user.id")
+    String update(@RequestParam(value = "coverFile", required = false) MultipartFile file, @Valid @ModelAttribute("collection") CollectionDto collectionDto, BindingResult result, Model model) throws IOException {
+        if (result.hasErrors()) {
+            model.addAttribute("collection", collectionDto);
+            return "backend/collection/edit";
+        }
+
+        doCover(file, collectionDto);
+
+        proofreadService.save(collectionDto);
+
+        return "redirect:/admin/collections";
     }
 }

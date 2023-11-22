@@ -44,7 +44,7 @@
                     <td th:text="${collection.createdAt}">collection created_at</td>
                     <td th:text="${collection.updatedAt}">collection updated_at</td>
                     <td class="center">
-                      <a href="#" class="text-sm">
+                      <a href="#" th:href="@{'admin/collections/edit'}" class="text-sm">
                         <i class="fas fa-edit"></i>
                         Edit
                       </a>

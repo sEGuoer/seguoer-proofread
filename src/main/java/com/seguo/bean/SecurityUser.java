@@ -5,6 +5,7 @@ import com.seguo.entity.Role;
 import com.seguo.entity.Permission;
 import com.seguo.entity.User;
 import lombok.Getter;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 public class SecurityUser implements UserDetails {
     @Getter
     private final User user;
@@ -93,6 +93,9 @@ public class SecurityUser implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
 }

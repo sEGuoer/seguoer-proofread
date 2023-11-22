@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProofreadServiceImpl implements ProofreadService {
@@ -39,6 +40,14 @@ public class ProofreadServiceImpl implements ProofreadService {
     @Override
     public void save(CollectionDto collectionDto) {
         Collection collection = new Collection();
+
+        if (collectionDto.getId() != null) {
+            collection = collectionRepository.findById(collectionDto.getId()).get();
+            collection.setUpdatedAt(LocalDateTime.now());
+        } else {
+            collection.setCreatedAt(LocalDateTime.now());
+        }
+
         collection.setTitle(collectionDto.getTitle());
         collection.setSlug(collectionDto.getSlug());
         collection.setType(collectionDto.getType());
@@ -46,7 +55,12 @@ public class ProofreadServiceImpl implements ProofreadService {
         collection.setPublished(collectionDto.isPublished());
         collection.setCover(collectionDto.getCover());
         collection.setUser(new User(collectionDto.getUser_id()));
-        collection.setCreatedAt(LocalDateTime.now());
         collectionRepository.save(collection);
+    }
+
+    @Override
+    public Optional<Collection> findById(Long id) {
+        return this.collectionRepository.findById(id);
+
     }
 }

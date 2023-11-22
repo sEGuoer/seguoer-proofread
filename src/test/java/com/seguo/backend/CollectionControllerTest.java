@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,7 +28,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "admin", roles = {"admin"})
+@WithUserDetails(userDetailsServiceBeanName = "jpaUserDetailsService", value = "admin@example.com")
 class CollectionControllerTest {
     @Autowired
     public MockMvc mvc;
@@ -130,6 +131,43 @@ class CollectionControllerTest {
         File coverOnDisk = new File(env.getProperty("custom.upload.base-path") + cover);
         Assertions.assertTrue(Files.exists(coverOnDisk.toPath()));
         Assertions.assertTrue(coverOnDisk.delete());
+
+        collectionRepository.delete(co.get());
+    }
+
+    @Test
+    void update(@Autowired CollectionRepository collectionRepository) throws Exception {
+        String title = "title-" + UUID.randomUUID();
+        mvc.perform(MockMvcRequestBuilders.post("/admin/collections/store")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("title", title)
+                        .param("slug", UUID.randomUUID().toString())
+                        .param("type", "doc")
+                        .param("description", "content-" + UUID.randomUUID())
+                        .param("user_id", "1")
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"))
+        ;
+        Optional<Collection> co = collectionRepository.findFirstByTitle(title);
+        Assertions.assertTrue(co.isPresent());
+        Collection collection = co.get();
+
+        String descriptionUpdated = "description--updated";
+        mvc.perform(MockMvcRequestBuilders.put("/admin/collections/update")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", collection.getId().toString())
+                        .param("title", collection.getTitle())
+                        .param("slug", UUID.randomUUID().toString())
+                        .param("type", collection.getType())
+                        .param("description", descriptionUpdated)
+                        .param("user_id", collection.getUser().getId().toString())
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections"))
+        ;
+
+        Collection collectionUpdated = collectionRepository.findFirstByTitle(title).get();
+        Assertions.assertEquals(descriptionUpdated, collectionUpdated.getDescription());
 
         collectionRepository.delete(co.get());
     }

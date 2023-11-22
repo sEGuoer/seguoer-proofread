@@ -5,6 +5,7 @@ import com.seguo.entity.Collection;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProofreadService {
     Page<Collection> findAll(int pageNumber, int pageSize);
@@ -15,4 +16,5 @@ public interface ProofreadService {
 
     void save(CollectionDto collectionDto);
 
+    Optional<Collection> findById(Long id);
 }
