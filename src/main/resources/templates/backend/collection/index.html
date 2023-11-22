@@ -38,7 +38,7 @@
                   <tr th:each="collection, stats:${page.getContent()}">
                     <td><input name="ids[]" type="checkbox" th:value="${collection.id}" class="delete_checkbox"/></td>
                     <th th:text="${collection.id}">collection id</th>
-                    <td><a href="#" th:text="${collection.title}">collection tile</a></td>
+                    <td><a href="#" target="_blank" th:href="@{'/docs/' + ${collection.id}}" th:text="${collection.title}">collection tile</a></td>
                     <td th:text="${collection.type}">collection type</td>
                     <td th:text="${collection.isPublished}">collection isPublished</td>
                     <td th:text="${collection.createdAt}">collection created_at</td>

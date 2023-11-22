@@ -52,4 +52,25 @@ public class CollectionControllerTest {
 
         collectionRepository.deleteAllById(ids);
     }
+
+    @Test
+    void show() throws Exception {
+        List<Long> ids = new ArrayList<>();
+        Collection collection = new Collection();
+        collection.setTitle(UUID.randomUUID().toString());
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+        ids.add(collection.getId());
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/docs/" + collection.getId())
+                )
+                .andExpect(MockMvcResultMatchers.view().name("collection/doc/show"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("doc"))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(collection.getTitle())))
+        ;
+
+        collectionRepository.deleteAllById(ids);
+    }
 }

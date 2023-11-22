@@ -1,0 +1,32 @@
+<div th:replace="~{ app :: layout (${doc.title}, _, ~{::#main}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+  <div class="container mb-2rem" id="main">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="row">
+          <div class="col-3">
+            <img th:src="${#strings.isEmpty(doc.cover) ? '/img/cover/doc-default-cover.png' : doc.cover}" class="img-fluid shadow-sm">
+          </div>
+          <div class="col-9">
+            <div class="base-info">
+              <p class="font-size-12 text-muted mb-1">名称</p>
+              <h1 class="h4" th:text="${doc.title}">doc.title</h1>
+              <p class="font-size-12 text-muted mb-1">简介</p>
+              <p class="" th:text="${doc.description}">doc.description</p>
+              <p class="font-size-12 text-muted mb-1">作者</p>
+              <p class="font-size-14"><i th:text="${doc.user.name}">doc.user.name</i></p>
+            </div>
+          </div>
+        </div>
+        <div class="collections-syllabus-box mt-5">
+          <p class="font-size-12 text-muted mb-1">内容</p>
+          <div class="py-2 small d-flex justify-content-between">
+            <span>共 xx 个章节 • xx 篇文章</span>
+          </div>
+          <div class="collections-syllabus">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
