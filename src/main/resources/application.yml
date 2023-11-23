@@ -25,6 +25,6 @@ my:
       - name: 'users'
         description: "/admin/users"
         data: 'users'
-      - name: 'Collections'
+      - name: 'c  ollections'
         description: "/admin/collections"
         data: 'layer-group'

@@ -171,4 +171,24 @@ class CollectionControllerTest {
 
         collectionRepository.delete(co.get());
     }
+
+    @Test
+    void togglePublished(@Autowired CollectionRepository collectionRepository) throws Exception {
+        boolean published = false;
+        Collection collection = new Collection();
+        collection.setTitle(UUID.randomUUID().toString());
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setPublished(published);
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+
+        mvc.perform(MockMvcRequestBuilders.post("/admin/collections/togglePublished/" + collection.getId()))
+                .andExpect(MockMvcResultMatchers.content().string("SUCCESS"))
+        ;
+
+        Optional<Collection> byId = collectionRepository.findById(collection.getId());
+        Assertions.assertTrue(byId.isPresent());
+        Assertions.assertEquals(byId.get().isPublished(), !published);
+    }
 }

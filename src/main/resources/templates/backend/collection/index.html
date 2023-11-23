@@ -55,6 +55,10 @@
                         <form th:id="${'destroy-form-' + collection.id}" th:action="@{'/admin/collections/destroy/' + ${collection.id}}" th:method="delete" style="display: none;">
                         </form>
                       </a>
+                      <a href="javascript:void(0)" onclick="togglePublished(this)" th:data-id="${collection.id}" th:data-text="${collection.published ? 'Offline' : 'Online'}" class="pl-3">
+                        <i class="fas fa-arrow-alt-circle-down" th:class="|fas ${collection.published ? 'fa-arrow-alt-circle-down' : 'fa-arrow-alt-circle-up'}|"></i>
+                        <span class="text-sm" th:text="${collection.published ? 'Offline' : 'Online'}"></span>
+                      </a>
                     </td>
                   </tr>
                   </tbody>
@@ -116,6 +120,31 @@
                   console.log("Status: " + status);
                 })
       }  }
+
+    function togglePublished(target) {
+      let id = $(target).data("id");
+      let text = $(target).data("text");
+      if (confirm('Are you sure you want to ' + text + '? (id=' + id + ')')) {
+        $.ajax({
+          url: '/admin/collections/togglePublished/' + id,
+          type: "POST",
+        })
+                .done(function (response) {
+                  if ('SUCCESS' === response) {
+                    location.href = '/admin/collections';
+                  } else {
+                    console.log(response);
+                    alert(response);
+                  }
+                })
+                .fail(function (xhr, status, errorThrown) {
+                  alert("Sorry, there was a problem!");
+                  console.log("Error: " + errorThrown);
+                  console.log("Status: " + status);
+                })
+      }
+    }
   </script>
+
 
 </div>

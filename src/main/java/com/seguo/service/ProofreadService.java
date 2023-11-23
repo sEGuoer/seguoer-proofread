@@ -19,4 +19,5 @@ public interface ProofreadService {
     Optional<Collection> findById(Long id);
     Page<Collection> findAllDocs(int pageNumber, int pageSize);
 
+    void togglePublished(Long id);
 }

@@ -4,6 +4,7 @@ package com.seguo.controller.backend;
 import com.seguo.dto.CollectionDto;
 import com.seguo.entity.Collection;
 import com.seguo.service.ProofreadService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,5 +115,21 @@ public class ProofreadController {
         proofreadService.save(collectionDto);
 
         return "redirect:/admin/collections";
+    }
+
+    @PostMapping("togglePublished/{id}")
+    @ResponseBody
+    @Transactional
+    public String togglePublished(@PathVariable Long id) {
+        Optional<Collection> optionalPost = proofreadService.findById(id);
+
+        if (optionalPost.isEmpty()
+                || !"doc".equals(optionalPost.get().getType())
+        ) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doc Not Found");
+        }
+
+        proofreadService.togglePublished(id);
+        return "SUCCESS";
     }
 }
