@@ -15,9 +15,12 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-12">
+          <div class="col-lg-8 col-12">
             <div class="card">
-              <form id="post-form" method="post" action="#" th:action="@{/admin/collections/update}" enctype="multipart/form-data" th:object="${collection}">
+              <div class="card-header">
+                <h3 class="card-title">Course Basic Info</h3>
+              </div>
+              <form id="post-form" method="post" action="#" th:action="@{/backend/collections/update}" enctype="multipart/form-data" th:object="${collection}">
                 <input type="hidden" name="_method" value="PUT">
                 <div th:replace="~{backend/collection/_form :: #collection-form}"></div>
                 <div class="card-footer">
@@ -26,6 +29,9 @@
               </form>
             </div>
             <!-- /.card -->
+          </div>
+          <div class="col-lg-4 col-12">
+            <div th:replace="~{backend/collection/_form :: #syllabus}"></div>
           </div>
         </div>
       </div>
