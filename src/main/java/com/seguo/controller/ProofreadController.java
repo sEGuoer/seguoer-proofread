@@ -27,7 +27,7 @@ public class ProofreadController {
                                 @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Collection> pageContent = proofreadService.findAllDocs(currentPage, pageSize);
+        Page<Collection> pageContent = proofreadService.findAllPublishedDocs(currentPage, pageSize);
         model.addAttribute("page", pageContent);
         return "collection/doc/index";
     }

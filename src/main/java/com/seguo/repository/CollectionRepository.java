@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CollectionRepository extends JpaRepository<Collection,Long> {
     Optional<Collection> findFirstByTitle(String title);
 
-    Page<Collection> findAllByType(String type, Pageable pageable);
+    Page<Collection> findAllByPublishedIsTrueAndType(String type, Pageable pageable);
 
     @Modifying
     @Query(value = """

@@ -17,7 +17,7 @@ public interface ProofreadService {
     void save(CollectionDto collectionDto);
 
     Optional<Collection> findById(Long id);
-    Page<Collection> findAllDocs(int pageNumber, int pageSize);
+    Page<Collection> findAllPublishedDocs(int pageNumber, int pageSize);
 
     void togglePublished(Long id);
 }
