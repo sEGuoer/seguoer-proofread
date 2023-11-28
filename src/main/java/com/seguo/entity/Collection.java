@@ -3,13 +3,17 @@ package com.seguo.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @DynamicUpdate
 public class Collection {
@@ -38,6 +42,9 @@ public class Collection {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime deletedAt;
+    public Collection(Long id) {
+        this.id = id;
+    }
 
     @ManyToOne(
             targetEntity = User.class,
@@ -45,4 +52,7 @@ public class Collection {
     )
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
+    @OneToMany(mappedBy = "collection", fetch = FetchType.EAGER)
+    private List<Section> sections = new ArrayList<>();
+
 }
