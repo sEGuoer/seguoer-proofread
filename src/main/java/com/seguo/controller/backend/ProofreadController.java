@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -61,7 +62,7 @@ public class ProofreadController {
     }
 
     @PostMapping("store")
-    String store(@RequestParam(value = "coverFile", required = false) MultipartFile file,@Valid @ModelAttribute("collection") CollectionDto collectionDto,
+    String store(@RequestParam(value = "coverFile", required = false) MultipartFile file,@Validated(CollectionDto.OnSave.class) @ModelAttribute("collection") CollectionDto collectionDto,
                  BindingResult result) throws IOException {
         if (result.hasErrors()) {
             return "backend/collection/create";
