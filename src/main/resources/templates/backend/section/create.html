@@ -19,7 +19,7 @@
             <div class="card">
               <form id="post-form" method="post" action="#" th:action="@{/admin/sections/store}" enctype="multipart/form-data" th:object="${section}">
                 <input type="hidden" name="collection_id" th:value="${param.collection_id} ">
-                <div th:replace="~{admin/section/_fragment :: #section-form}"></div>
+                <div th:replace="~{/backend/section/_fragment :: #section-form}"></div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">保存</button>
                 </div>
