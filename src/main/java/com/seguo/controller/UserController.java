@@ -82,7 +82,7 @@ public class UserController {
         } catch (Exception e) {
             result.rejectValue("email", null, "未知错误请联系管理员");
             model.addAttribute("passwordResetEmail",passwordResetEmailDto);
-            return "/user/forget";
+            return "user/forget";
         }
 
         MimeMessage message = sender.createMimeMessage();
@@ -122,7 +122,7 @@ public class UserController {
                                 RedirectAttributes attributes) {
         if(result.hasErrors()){
             attributes.addFlashAttribute("passwordResetDto", passwordResetDto);
-            return "/user/password-reset";
+            return "user/password-reset";
         }
 
         PasswordResetToken token = passwordResetTokenService.findByToken(passwordResetDto.getToken());

@@ -30,7 +30,7 @@ public class ProofreadController {
     @Autowired
     ProofreadService proofreadService;
 
-    @GetMapping("")
+    @GetMapping()
     String index(Model model,
                  @RequestParam("page") Optional<Integer> page,
                  @RequestParam("size") Optional<Integer> size) {
