@@ -18,7 +18,7 @@
           <div class="col-12">
             <div class="card">
               <form id="post-form" method="post" action="#" th:action="@{/admin/collections/store}" enctype="multipart/form-data" th:object="${collection}">
-                <div th:replace="~{backend/collection/_form :: #collection-form}"></div>
+                <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">保存</button>
                 </div>

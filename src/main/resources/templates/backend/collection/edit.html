@@ -1,4 +1,4 @@
-<div th:replace="~{ backend/app :: layout ('Edit Collection', _, ~{::#main}, _) }" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{ backend/app :: layout ('Edit Collection', _, ~{::#main}, ~{backend/collection/_fragment::#js_content}) }" xmlns:th="http://www.thymeleaf.org">
   <div class="content-wrapper" id="main">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -22,7 +22,7 @@
               </div>
               <form id="post-form" method="post" action="#" th:action="@{/backend/collections/update}" enctype="multipart/form-data" th:object="${collection}">
                 <input type="hidden" name="_method" value="PUT">
-                <div th:replace="~{backend/collection/_form :: #collection-form}"></div>
+                <div th:replace="~{backend/collection/_fragment :: #collection-form}"></div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">更新</button>
                 </div>
