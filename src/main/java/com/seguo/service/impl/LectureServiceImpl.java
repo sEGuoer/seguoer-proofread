@@ -45,5 +45,10 @@ public class LectureServiceImpl implements LectureService {
     public Optional<Lecture> findById(Long id) {
         return lectureRepository.findById(id);
     }
+
+    @Override
+    public void destroy(Long id) {
+        lectureRepository.deleteById(id);
+    }
 }
 

@@ -9,4 +9,6 @@ public interface LectureService {
     void save(LectureDto lectureDto);
 
     Optional<Lecture> findById(Long id);
+
+    void destroy(Long id);
 }

@@ -128,4 +128,40 @@ public class LectureControllerTest extends WithMockUserBaseTest {
         Assertions.assertTrue(sectionRepository.findById(section.getId()).isEmpty());
         Assertions.assertTrue(collectionRepository.findById(collection.getId()).isEmpty());
     }
+
+    @Test
+    void destroy() throws Exception {
+        String collectionTitle = UUID.randomUUID().toString();
+        Collection collection = new Collection();
+        collection.setTitle(collectionTitle);
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+
+        String sectionTitle = UUID.randomUUID().toString();
+        Section section = new Section();
+        section.setTitle(sectionTitle);
+        section.setCollection(new Collection(collection.getId()));
+        sectionRepository.save(section);
+
+        String lectureTitle = UUID.randomUUID().toString();
+        Lecture lecture = new Lecture();
+        lecture.setTitle(lectureTitle);
+        lecture.setSection(new Section(section.getId()));
+        lecture.setCollection(new Collection(collection.getId()));
+        lectureRepository.save(lecture);
+
+        mvc.perform(MockMvcRequestBuilders.delete("/admin/lectures/destroy/" + lecture.getId()))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections/edit/" + collection.getId()))
+        ;
+
+        Optional<Lecture> byId = lectureRepository.findById(lecture.getId());
+        Assertions.assertTrue(byId.isEmpty());
+
+        sectionRepository.delete(section);
+        Assertions.assertTrue(sectionRepository.findById(section.getId()).isEmpty());
+        collectionRepository.delete(collection);
+        Assertions.assertTrue(collectionRepository.findById(collection.getId()).isEmpty());
+    }
 }
