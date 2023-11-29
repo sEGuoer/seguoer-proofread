@@ -4,8 +4,14 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-12 d-flex justify-content-between">
+                    <div class="col-sm-6 d-flex justify-content-between">
                         <h1>Create New Lecture</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">Section: <a class="pl-2" th:href="@{'/backend/collections/edit/' + ${collection.id}}" th:text="${section.title}">section.title</a></li>
+                            <li class="breadcrumb-item active">You are creating the <b class="text-danger px-1" th:text="|${section.lectures.size() + 1}th|">**th</b> lecture</li>
+                        </ol>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
