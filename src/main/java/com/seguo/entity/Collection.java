@@ -55,4 +55,6 @@ public class Collection {
     @OneToMany(mappedBy = "collection", fetch = FetchType.EAGER)
     private List<Section> sections = new ArrayList<>();
 
+    @OneToMany(mappedBy = "collection", fetch = FetchType.EAGER)
+    private List<Lecture> lectures = new ArrayList<>();
 }

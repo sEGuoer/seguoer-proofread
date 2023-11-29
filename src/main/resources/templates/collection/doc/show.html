@@ -20,7 +20,7 @@
         <div class="collections-syllabus-box mt-5">
           <p class="font-size-12 text-muted mb-1">内容</p>
           <div class="py-2 small d-flex justify-content-between">
-            <span>共 xx 个章节 • xx 篇文章</span>
+            <span>共 <b th:text="${doc.sections.size()}" class="font-weight-normal"></b> 个章节 • <b th:text="${doc.lectures.size()}" class="font-weight-normal"></b> 篇文章</span>
           </div>
           <div class="collections-syllabus">
 
