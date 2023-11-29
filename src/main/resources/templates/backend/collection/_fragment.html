@@ -71,7 +71,7 @@
                 <i class="fa fa-file-alt"></i>
                 <span th:text="${lecture.title}">lecture.title</span>
                 <span class="lecture-actions small pl-2">
-                                            <a href="#"><i class="fa fa-edit"></i></a>
+                                            <a href="#" th:href="@{'/admin/lectures/edit/' + ${lecture.id}(collection_id=${collection.id}, section_id=${section.id})}"><i class="fa fa-edit"></i></a>
                                             <a href="#">
                                                 <i class="fa fa-trash-alt"></i>
                                             </a>

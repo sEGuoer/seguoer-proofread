@@ -6,6 +6,7 @@
 </head>
 <body>
 <div class="card-body" id="lecture-form">
+  <input type="hidden" name="id" th:value="*{id}">
   <div class="form-group">
     <label for="title">标题</label>
     <input th:field="*{title}" type="text" class="form-control" th:class="|form-control ${#fields.hasErrors('title') ? 'is-invalid' : ''}|" name="title" id="title" placeholder="标题" required>
@@ -19,7 +20,8 @@
   <div class="form-group">
     <label for="description">描述</label>
     <div id="description">
-      <textarea th:field="*{description}" name="description" class="form-control" rows="2"></textarea>
+      <textarea th:field="*{description}" name="description" class="form-control" th:class="|form-control ${#fields.hasErrors('description') ? 'is-invalid' : ''}|" rows="2"></textarea>
+      <span th:if="${#fields.hasErrors('description')}" id="description-error" class="error invalid-feedback" th:errors="*{description}"></span>
     </div>
   </div>
 </div>
