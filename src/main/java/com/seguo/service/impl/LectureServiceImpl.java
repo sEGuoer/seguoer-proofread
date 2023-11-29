@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +50,11 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public void destroy(Long id) {
         lectureRepository.deleteById(id);
+    }
+
+    @Override
+    public void destroyAllById(List<Long> ids) {
+        lectureRepository.deleteAllById(ids);
     }
 }
 
