@@ -56,32 +56,32 @@
   </div>
   <div class="card-body">
     <div class="syllabus">
-      <ol class="sortable text-muted">
-        <li class="section-item shadow-sm">
-          <i class="fa fa-folder"></i>
-          <span>section.title</span>
-          <span class="section-actions small pl-2">
-                                <a href="#"><i class="fa fa-edit"></i></a>
-                                <a href="#">
-                                    <i class="fa fa-trash-alt"></i>
-                                </a>
-                            </span>
-          <ol>
-            <li class="lecture-item">
-              <i class="fa fa-file-alt"></i>
-              <span>lecture.title</span>
-              <span class="lecture-actions small pl-2">
+      <ol class="sortable text-muted" th:if="${#arrays.length(collection.sections) > 0}">
+        <th:block th:each="section : ${collection.sections}">
+          <li class="section-item shadow-sm">
+            <i class="fa fa-folder"></i>
+            <span th:text="${section.title}">section.title</span>
+            <span class="section-actions small pl-2">
+              <a href="#"><i class="fa fa-edit"></i></a>
+              <a href="#"><i class="fa fa-trash-alt"></i></a>
+          </span>
+            <ol>
+              <li class="lecture-item">
+                <i class="fa fa-file-alt"></i>
+                <span>lecture.title</span>
+                <span class="lecture-actions small pl-2">
                                             <a href="#"><i class="fa fa-edit"></i></a>
                                             <a href="#">
                                                 <i class="fa fa-trash-alt"></i>
                                             </a>
                                         </span>
-            </li>
-          </ol>
-          <div class="lecture-plus small">
-            <a href="#"><i class="fa fa-plus lecture-plus-icon"></i>Add New Lecture</a>
-          </div>
-        </li>
+              </li>
+            </ol>
+            <div class="lecture-plus small">
+              <a href="#"><i class="fa fa-plus lecture-plus-icon"></i>Add New Lecture</a>
+            </div>
+          </li>
+        </th:block>
       </ol>
       <div class="section-plus small">
         <a href="#" th:href="@{/admin/sections/create(collection_id=${collection.id})}"><i class="fa fa-plus section-plus-icon"></i>Add New Section</a>
