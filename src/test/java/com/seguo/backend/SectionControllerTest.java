@@ -61,4 +61,53 @@ public class SectionControllerTest {
         Assertions.assertTrue(co.isPresent());
         collectionRepository.delete(co.get());
     }
+
+    @Test
+    void update() throws Exception {
+        String collectionTitle = UUID.randomUUID().toString();
+        Collection collection = new Collection();
+        collection.setTitle(collectionTitle);
+        collection.setSlug(UUID.randomUUID().toString());
+        collection.setType("doc");
+        collection.setUser(new User(1L));
+        collectionRepository.save(collection);
+
+        String sectionTitle = UUID.randomUUID().toString();
+        Section section = new Section();
+        section.setTitle(sectionTitle);
+        section.setCollection(new Collection(collection.getId()));
+        sectionRepository.save(section);
+
+        String illegalSortOrderValue = "100000";
+        mvc.perform(MockMvcRequestBuilders.put("/admin/sections/update")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", section.getId().toString())
+                        .param("title", section.getTitle())
+                        .param("sortOrder", illegalSortOrderValue)
+                        .param("collection_id", collection.getId().toString())
+                )
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("section", "sortOrder", "Digits"))
+        ;
+
+        String descriptionUpdated = "description--updated";
+        mvc.perform(MockMvcRequestBuilders.put("/admin/sections/update")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", section.getId().toString())
+                        .param("title", section.getTitle())
+                        .param("sortOrder", "0")
+                        .param("description", descriptionUpdated)
+                        .param("collection_id", collection.getId().toString())
+                )
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/admin/collections/edit/" + collection.getId()))
+        ;
+
+        Section sectionUpdated = sectionRepository.findById(section.getId()).get();
+        Assertions.assertEquals(descriptionUpdated, sectionUpdated.getDescription());
+
+        sectionRepository.delete(section);
+        collectionRepository.delete(collection);
+
+        Assertions.assertTrue(sectionRepository.findById(section.getId()).isEmpty());
+        Assertions.assertTrue(collectionRepository.findById(collection.getId()).isEmpty());
+    }
 }

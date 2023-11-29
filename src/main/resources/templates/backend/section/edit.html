@@ -1,0 +1,43 @@
+<div th:replace="~{ backend/app :: layout ('Edit Section', _, ~{::#main}, _) }" xmlns:th="http://www.thymeleaf.org">
+  <div class="content-wrapper" id="main">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6 d-flex justify-content-between">
+            <h1>Edit Section</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">Collection: <a class="pl-2" th:href="@{'/admin/collections/edit/' + ${collection.id}}" th:text="${collection.title}">collection.title</a></li>
+              <li class="breadcrumb-item active">You are editing the <b class="text-danger px-1" th:text="|${collection.sections.size()}th|">**th</b> section</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <form id="post-form" method="post" action="#" th:action="@{/admin/sections/update}" enctype="multipart/form-data" th:object="${section}">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="id" th:value="*{id}">
+                <input type="hidden" name="collection_id" th:value="${param.collection_id} ">
+                <div th:replace="~{backend/section/_fragment :: #section-form}"></div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">更新</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+</div>

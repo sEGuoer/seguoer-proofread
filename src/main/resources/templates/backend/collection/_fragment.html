@@ -62,7 +62,7 @@
             <i class="fa fa-folder"></i>
             <span th:text="${section.title}">section.title</span>
             <span class="section-actions small pl-2">
-              <a href="#"><i class="fa fa-edit"></i></a>
+              <a href="#" th:href="@{'/admin/sections/edit/' + ${section.id}(collection_id=${collection.id})}"><i class="fa fa-edit"></i></a>
               <a href="#"><i class="fa fa-trash-alt"></i></a>
           </span>
             <ol th:if="${#arrays.length(section.lectures) > 0}">
