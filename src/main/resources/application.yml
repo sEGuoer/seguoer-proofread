@@ -28,3 +28,7 @@ my:
       - name: 'collections'
         description: "/admin/collections"
         data: 'layer-group'
+
+custom:
+  block:
+    separator: "===---block---==="

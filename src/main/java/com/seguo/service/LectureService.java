@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LectureService {
-    void save(LectureDto lectureDto);
+    Lecture save(LectureDto lectureDto);
 
     Optional<Lecture> findById(Long id);
 
     void destroy(Long id);
 
     void destroyAllById(List<Long> ids);
+
+    void saveBlocks(Long lectureId, LectureDto lectureDto);
 }
