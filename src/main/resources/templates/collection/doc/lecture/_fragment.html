@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>fragment</title>
+</head>
+<body>
+<aside id="lectures-show-aside" class="col-10 col-lg-2 doc-sidebar">
+  <div class="sticky-top">
+    <nav class="navbar navbar-vertical navbar-expand-lg navbar-light">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul id="syllabus-nav" class="nav flex-column nav-vertical-2">
+          <li th:each="section : ${lecture.collection.sections}" th:class="|nav-item ${lecture.section.id == section.id ? 'active' : '' }|">
+            <a class="nav-link" th:href="@{'#section-' + ${section.id}}" role="button"
+               data-toggle="collapse"
+               th:aria-expanded="${lecture.section.id == section.id ? 'true' : 'false' }"
+               th:aria-controls="|section-${section.id}|" th:text="${section.title}">
+            </a>
+            <div th:class="|collapse ${lecture.section.id == section.id ? 'show' : ''}|" th:id="|section-${section.id}|" data-parent="#syllabus-nav">
+              <ul class="nav flex-column pl-3">
+                <li class="nav-item" th:each="lect : ${section.lectures}">
+                  <a th:class="|nav-link ${lect.id == lecture.id ? 'active' : ''}|" th:href="@{'/docs/lecture/' + ${lect.id}}" th:text="${lect.title}">lect.title</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</aside>
+</body>
+</html>

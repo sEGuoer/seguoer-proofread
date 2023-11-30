@@ -43,7 +43,7 @@
                    th:class="|lecture-list collapse ${stats.index == 0 ? 'show' : '' }|">
                 <ul class="font-size-14" th:if="${section.lectures.size() > 0}">
                   <th:block th:each="lecture, stats:${section.lectures}">
-                    <a href="#">
+                    <a href="#" th:href="@{'/docs/lecture/' + ${lecture.id}}">
                       <li class="lecture doc">
                         <span class="lecture-title" th:text="${lecture.title}">lecture.title</span>
                       </li>

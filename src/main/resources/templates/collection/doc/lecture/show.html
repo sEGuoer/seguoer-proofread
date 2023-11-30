@@ -1,0 +1,85 @@
+<div th:replace="~{ app :: layout (${lecture.collection.title}, ~{::#css_content}, ~{::#main}, ~{::#js_content}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+  <div id="main" class="container-fluid doc-lecture mb-2rem">
+    <div class="row justify-content-center justify-content-lg-between">
+      <!-- navigation -->
+      <div th:replace="~{collection/doc/lecture/_fragment :: #lectures-show-aside}"></div>
+      <!-- / navigation -->
+
+      <!-- content -->
+      <article class="col-lg-10 doc-content">
+        <div class="row justify-content-center justify-content-lg-between doc-content-body">
+          <article class="col-10 col-lg-10 px-lg-5">
+            <h1 class="lecture-title" th:text="${lecture.title}">lecture.title</h1>
+            <p class="mate text-muted">
+              <span th:text="${lecture.section.collection.user.name}">lecture.section.collection.user.name</span>
+              <span> - </span>
+              <span th:text="${lecture.createdAt}"></span>
+              <span> - </span>
+              所属文档：<a th:href="@{'/docs/' + ${lecture.collection.id}}" th:text="${lecture.section.collection.title}">lecture.section.collection.title</a>
+            </p>
+            <div class="js-toc-content mt-1">
+              <div id="vditor-preview-element">
+                <div id="content" class="d-none" th:text="${content}">content</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- toc -->
+          <aside class="col-lg-2 d-none d-lg-block aside-toc">
+            <div id="outline" class="js-toc toc sticky-top text-muted"></div>
+          </aside>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div id="css_content">
+    <link href="/vendor/vditor/dist/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/vendor/tocbot/dist/tocbot.css">
+    <style>
+      img {
+        max-width: 100%;
+      }
+    </style>
+  </div>
+
+  <div id="js_content">
+    <script src="/vendor/tocbot/dist/tocbot.js"></script>
+    <script src="/vendor/vditor/dist/method.min.js"></script>
+    <script>
+      Vditor.preview(document.getElementById('vditor-preview-element'), document.getElementById('content').textContent,
+              {
+                cdn: '/vendor/vditor',
+                theme: {
+                  path: '/vendor/vditor/dist/css/content-theme',
+                },
+                lazyLoadImage: '/vendor/vditor/dist/images/img-loading.svg',
+                after () {
+                  tocbot.init({
+                    // Where to render the table of contents.
+                    tocSelector: '.js-toc',
+                    // Where to grab the headings to build the table of contents.
+                    contentSelector: '.js-toc-content',
+                    // Which headings to grab inside of the contentSelector element.
+                    headingSelector: 'h1, h2, h3, h4, h5, h6',
+                    // For headings inside relative or absolute positioned containers within content.
+                    hasInnerContainers: false,
+                    collapseDepth: 6,
+                  });
+                  $(".js-toc a.toc-link").mouseover(function () {
+                    $(this).attr('title', $(this).text());
+                  });
+                  $('.js-toc a.toc-link').on('click', function(e){
+                    //store hash
+                    const href = $(this).attr("href");
+                    const hash = href.substr(href.indexOf("#"));
+                    // animate
+                    $(hash).animateCss('slow');
+                    $(hash).animateCss('flash');
+                  });
+                },
+              }
+      );
+    </script>
+  </div>
+</div>
