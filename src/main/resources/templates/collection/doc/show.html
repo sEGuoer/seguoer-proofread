@@ -1,4 +1,4 @@
-<div th:replace="~{ app :: layout (${doc.title}, _, ~{::#main}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<div th:replace="~{ app :: layout (${doc.title}, _, ~{::#main}, ~{::#js_content}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <div class="container mb-2rem" id="main">
     <div class="row justify-content-center">
       <div class="col-lg-9">
@@ -21,12 +21,72 @@
           <p class="font-size-12 text-muted mb-1">内容</p>
           <div class="py-2 small d-flex justify-content-between">
             <span>共 <b th:text="${doc.sections.size()}" class="font-weight-normal"></b> 个章节 • <b th:text="${doc.lectures.size()}" class="font-weight-normal"></b> 篇文章</span>
+            <a href="javascript:void(0)" class="toggle-syllabus"></a>
           </div>
-          <div class="collections-syllabus">
-
+          <div class="collections-syllabus" th:if="${doc.sections.size() > 0}">
+            <th:block th:each="section, stats:${doc.sections}">
+              <div class="lecture-group-wrapper">
+                <div class="lecture-group-title clearfix" data-toggle="collapse"
+                     th:data-target="${'#collapse-' + section.id}"
+                     th:aria-expanded="${stats.index == 0 ? 'true' : 'false' }">
+                  <div class="title float-left" th:text="${section.title}">
+                    section.title
+                  </div>
+                  <div class="float-right">
+                    <span class="total-lectures" th:text="|${section.lectures.size()} Lectures|">
+                        section.lectures.size() Lectures
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div th:id="|collapse-${section.id}|"
+                   th:class="|lecture-list collapse ${stats.index == 0 ? 'show' : '' }|">
+                <ul class="font-size-14" th:if="${section.lectures.size() > 0}">
+                  <th:block th:each="lecture, stats:${section.lectures}">
+                    <a href="#">
+                      <li class="lecture doc">
+                        <span class="lecture-title" th:text="${lecture.title}">lecture.title</span>
+                      </li>
+                    </a>
+                  </th:block>
+                </ul>
+              </div>
+            </th:block>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="js_content">
+    <script type="module">
+      $(document).ready(function () {
+        $(".toggle-syllabus").on("click", function () {
+          $(this).toggleClass("active");
+
+          if ($(this).hasClass('active')) {
+            expandAll();
+          } else {
+            collapseAll();
+          }
+        })
+      });
+
+      function collapseAll() {
+        $(".lecture-group-title").each(function () {
+          $(this).addClass('collapsed');
+          $(this).attr('aria-expanded', false);
+          $($(this).attr('data-target')).removeClass('show');
+        });
+      }
+
+      function expandAll() {
+        $(".lecture-group-title").each(function () {
+          $(this).attr('aria-expanded', true);
+          $(this).removeClass('collapsed');
+          $($(this).attr('data-target')).addClass('show');
+        });
+      }
+    </script>
   </div>
 </div>

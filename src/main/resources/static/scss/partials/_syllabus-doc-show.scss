@@ -1,0 +1,111 @@
+.toggle-syllabus:before {
+  content: "展开所有章节";
+}
+
+.toggle-syllabus.active:before {
+  content: "收起所有章节";
+}
+
+.collections-syllabus .lecture-group-title .total-time {
+  width: 80px;
+  display: inline-block;
+  text-align: right;
+}
+.collections-syllabus .lecture-group-title .title {
+  max-width: 60%;
+  font-weight: 600;
+}
+
+.collections-syllabus .lecture-group-title {
+  position: relative;
+  padding: 10px 30px 10px 45px;
+  background: #f9f9f9;
+  border: 1px solid #e8e9eb;
+  cursor: pointer;
+  height: auto;
+  margin-top: 3px;
+  color: #505763;
+}
+
+.course-curriculum-box .course-curriculum-title {
+  padding-right: 31px;
+}
+
+.collections-syllabus .lecture-group-title:before {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  font-family: bootstrap-icons;
+  font-weight: 900;
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  color: #007791;
+}
+
+.collections-syllabus .lecture-group-title[aria-expanded="false"]:before {
+  content: "\f4fe";
+}
+
+.collections-syllabus .lecture-group-title[aria-expanded="true"]:before {
+  content: "\f2ea";
+}
+
+.collections-syllabus .lecture-group-title[aria-expanded="true"] .total-lectures {
+  /*display: none;*/
+}
+.collections-syllabus .lecture-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.collections-syllabus .lecture-list .lecture {
+  padding: 12px 30px 12px 73px;
+  position: relative;
+  border-bottom: 1px solid #e8e9eb;
+  border-left: 1px solid #e8e9eb;
+  border-right: 1px solid #e8e9eb;
+  color: #686f7a;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.collections-syllabus .lecture-list .lecture .lecture-title {
+  width: 50%;
+  display: inline-block;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -ms-webkit-transition: 0.3s;
+}
+.collections-syllabus .lecture-list .lecture .lecture-time {
+  width: 80px;
+  display: inline-block;
+  text-align: right;
+}
+
+.collections-syllabus .lecture-list .lecture:before {
+  font-family: bootstrap-icons;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  content: "\f49c";
+  position: absolute;
+  left: 45px;
+  opacity: 0.8;
+  font-weight: 900;
+  top: 17px;
+}
+.collections-syllabus .lecture-list .lecture.doc:before {
+  content: "\f38b";
+}
