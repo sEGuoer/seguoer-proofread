@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>fragment</title>
+</head>
+<body>
+<div class="card-body" id="fragment-block-form">
+  <input type="hidden" name="lecture_id" th:value="${param.lecture_id} ">
+  <input type="hidden" name="collection_id" th:value="${param.collection_id} ">
+  <div class="form-group">
+    <label for="content">内容</label>
+    <div id="content">
+      <textarea id="content-textarea" th:field="*{content}" name="content" class="form-control" th:class="|form-control ${#fields.hasErrors('content') ? 'is-invalid' : ''}|" rows="2"></textarea>
+      <span th:if="${#fields.hasErrors('content')}" id="description-error" class="error invalid-feedback" th:errors="*{content}"></span>
+    </div>
+  </div>
+</div>
+
+
+<div id="css_content">
+  <link rel="stylesheet" href="/vendor/vditor/dist/index.css">
+</div>
+
+<div id="js_content">
+  <script src="/vendor/vditor/dist/index.min.js" defer></script>
+  <script>
+    $(function() {
+      let vditor = new Vditor('content', {
+        mode: 'sv',
+        height: 500,
+        cdn: '/vendor/vditor',
+        preview: {
+          theme: {
+            path: '/vendor/vditor/dist/css/content-theme',
+          }
+        },
+        counter: {
+          enable: true,
+        },
+        cache: {
+          enable: false,
+        },
+        upload: {
+          url: '/backend/images/uploadFromVditor',
+          fieldName: 'image[]',
+          max: 10 * 1024 * 1024,
+          headers: {
+            'accept': 'application/json',
+          },
+          linkToImgUrl: '/backend/images/uploadLinkFromPasteToVditor',
+          linkToImgFormat: function (responseText) {
+            vditor.setValue(vditor.getValue().replace(JSON.parse(responseText).data.originalURL, JSON.parse(responseText).data.url));
+            /**
+             * Uncaught SyntaxError: Unexpected token u in JSON at position 0
+             * at JSON.parse (<anonymous>)
+             * at XMLHttpRequest.i.onreadystatechange (index.min.js:27)
+             */
+            // It may be a bug in vditor
+          }
+        },
+        fullscreen: {
+          index: 1080
+        }
+      })
+
+      $("#block-form").submit(function() {
+        $(this).append(
+                $('<textarea />').attr("id", "content-textarea")
+                        .attr("class", "d-none")
+                        .attr('name', 'content')
+        );
+        $('#content-textarea').val(vditor.getValue());
+        return true;
+      });
+    });
+  </script>
+</div>
+</body>
+</html>

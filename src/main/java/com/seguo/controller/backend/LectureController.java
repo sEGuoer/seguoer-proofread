@@ -5,6 +5,7 @@ import com.seguo.entity.Lecture;
 import com.seguo.service.LectureService;
 import com.seguo.service.ProofreadService;
 import com.seguo.service.SectionService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,9 +84,13 @@ public class LectureController {
     }
 
     @DeleteMapping("destroy/{id}")
-    String destroy(@PathVariable Long id) {
+    @Transactional
+    public String destroy(@PathVariable Long id) {
         Lecture lecture = lectureService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Lecture Not Found"));
         lectureService.destroy(id);
+        if (!lecture.getBlocks().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There are also blocks under the lecture, which are not allowed to be deleted directly.");
+        }
         return "redirect:/admin/collections/edit/" + lecture.getCollection().getId();
     }
 }

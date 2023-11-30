@@ -1,0 +1,42 @@
+<div th:replace="~{ backend/app :: layout ('Edit Block', ~{backend/block/_fragment::#css_content}, ~{::#main}, ~{backend/block/_fragment::#js_content}) }" xmlns:th="http://www.thymeleaf.org">
+  <div class="content-wrapper" id="main">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6 d-flex justify-content-between">
+            <h1>Edit Block</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">Lecture: <a class="pl-2" th:href="@{'/admin/collections/edit/' + ${collection.id}}" th:text="${lecture.title}">lecture.title</a></li>
+              <li class="breadcrumb-item active">You are editing the <b class="text-danger px-1" th:text="|${lecture.blocks.size()}th|">**th</b> block</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <form id="block-form" method="post" action="#" th:action="@{/admin/blocks/update}" enctype="multipart/form-data" th:object="${block}">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="id" th:value="*{id}">
+                <div th:replace="~{backend/block/_fragment :: #fragment-block-form}"></div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">更新</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+</div>

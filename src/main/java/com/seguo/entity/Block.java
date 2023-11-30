@@ -7,48 +7,35 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @DynamicUpdate
-public class Lecture {
+public class Block {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String title;
-    String titleTranslation;
-    @Column(unique = true)
-    String slug;
     String content;
-    String video;
-    String videoId;
-    long duration;
-    String description;
-    String descriptionTranslation;
+    String contentTranslation;
     int sortOrder;
     boolean published;
-    boolean free;
-    boolean requiresLogin;
-    String cover;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime deletedAt;
 
-    public Lecture(Long id) {
+    public Block(Long id) {
         this.id = id;
     }
 
     @ManyToOne(
-            targetEntity = Section.class,
-            fetch = FetchType.LAZY
+            targetEntity = Lecture.class,
+            fetch = FetchType.EAGER
     )
-    @JoinColumn(name = "section_id", referencedColumnName = "id")
-    Section section;
+    @JoinColumn(name = "lecture_id", referencedColumnName = "id")
+    Lecture lecture;
 
     @ManyToOne(
             targetEntity = Collection.class,
@@ -56,7 +43,5 @@ public class Lecture {
     )
     @JoinColumn(name = "collection_id", referencedColumnName = "id")
     Collection collection;
-
-    @OneToMany(mappedBy = "lecture", fetch = FetchType.EAGER)
-    private List<Block> blocks = new ArrayList<>();
 }
+
