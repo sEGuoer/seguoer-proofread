@@ -1,0 +1,4 @@
+TRUNCATE TABLE collection;
+TRUNCATE TABLE section;
+TRUNCATE TABLE lecture;
+TRUNCATE TABLE block;
