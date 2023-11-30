@@ -1,4 +1,4 @@
-<div th:replace="~{ app :: layout ('文档', _, ~{::#main}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<div th:replace="~{ app :: layout ('文档', _, ~{::#main},_) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <div class="container" id="main">
     <div class="row">
       <div class="col-lg-6 mb-4" th:each="doc, stats:${page.getContent()}">
