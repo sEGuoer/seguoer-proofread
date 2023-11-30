@@ -1,14 +1,26 @@
 {
-  "js/app.css": {
+  "static/js/app.css": {
     "file": "assets/app.css",
-    "src": "js/app.css"
+    "src": "static/js/app.css"
   },
-  "js/app.js": {
+  "static/js/app.js": {
     "css": [
       "assets/app.css"
     ],
     "file": "assets/app.js",
     "isEntry": true,
-    "src": "js/app.js"
+    "src": "static/js/app.js"
+  },
+  "static/js/backend.css": {
+    "file": "assets/backend.css",
+    "src": "static/js/backend.css"
+  },
+  "static/js/backend.js": {
+    "css": [
+      "assets/backend.css"
+    ],
+    "file": "assets/backend.js",
+    "isEntry": true,
+    "src": "static/js/backend.js"
   }
 }

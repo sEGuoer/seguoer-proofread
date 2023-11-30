@@ -1,0 +1,89 @@
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.syllabus {
+  .dragged {
+    position: absolute;
+    top: 0;
+    opacity: 0.5;
+    z-index: 2000;
+  }
+
+  .sortable {
+    padding: 0;
+    margin: 0;
+
+    ol {
+      padding: 0;
+      margin: 0 0 10px 20px;
+    }
+  }
+
+  ol.sortable {
+    margin: 0 0 9px 0;
+    min-height: 10px;
+
+    li {
+      display: block;
+      margin: 5px;
+      padding: 5px;
+      border: 1px solid #e9ecef;
+
+      i {
+        padding-left: 5px;
+        padding-right: 10px;
+      }
+    }
+
+    li.placeholder {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      border: none;
+
+      &:before {
+        position: absolute;
+        content: "";
+        width: 0;
+        height: 0;
+        margin-top: -5px;
+        left: -5px;
+        top: -4px;
+        border: 5px solid transparent;
+        border-left-color: red;
+        border-right: none;
+      }
+    }
+  }
+
+  .section-actions, .lecture-actions, .block-actions {
+    font-size: 10px;
+    display: none;
+  }
+
+  .section-plus {
+    margin-left: 5px;
+    margin-bottom: 5px;
+
+    i.section-plus-icon {
+      padding-right: 5px;
+    }
+  }
+  .lecture-plus {
+    margin-left: 20px;
+    margin-bottom: 5px;
+
+    i.lecture-plus-icon {
+      padding-right: 5px;
+    }
+  }
+  .block-plus {
+    margin-left: 20px;
+    margin-bottom: 5px;
+
+    i.block-plus-icon {
+      padding-right: 5px;
+    }
+  }
+}
