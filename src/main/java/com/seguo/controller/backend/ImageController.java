@@ -84,7 +84,9 @@ public class ImageController {
         String url = body.get("url");
 
         Map<String, String> data = new HashMap<>();
-        if (url.startsWith(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort())) {
+        if (!url.startsWith("http")
+                || url.startsWith(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort())
+        ) {
             result.put("msg", "无需额外处理，直接返回原图地址");
             result.put("code", 0);
             data.put("originalURL", url);
