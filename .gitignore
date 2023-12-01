@@ -6,3 +6,4 @@ src/main/resources/scss/*
 src/main/resources/js/app.js
 src/main/resources/build/*
 src/main/resources/templates/vendor
+src/main/resources/application-local.yml
