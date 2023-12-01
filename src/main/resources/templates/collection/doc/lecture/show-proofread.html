@@ -1,0 +1,180 @@
+<div th:replace="~{ app :: layout (${lecture.collection.title}, ~{::#css_content}, ~{::#main}, ~{::#js_content}) }" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+  <div id="main" class="container-fluid doc-lecture mb-2rem">
+    <div class="row justify-content-center justify-content-lg-between">
+      <!-- navigation -->
+      <div th:replace="~{collection/doc/lecture/_fragment :: #lectures-show-aside}"></div>
+      <!-- / navigation -->
+
+      <!-- content -->
+      <article class="col-lg-10 doc-content">
+        <div class="row justify-content-center justify-content-lg-between doc-content-body">
+          <article class="col-10 col-lg-10 px-lg-5">
+            <h1 class="lecture-title" th:text="${lecture.title}">lecture.title</h1>
+            <p class="mate text-muted">
+              <span th:text="${lecture.section.collection.user.name}">lecture.section.collection.user.name</span>
+              <span> - </span>
+              <span th:text="${lecture.createdAt}"></span>
+              <span> - </span>
+              所属文档：<a th:href="@{'/docs/' + ${lecture.collection.id}}" th:text="${lecture.section.collection.title}">lecture.section.collection.title</a>
+              <span class="float-right">
+                <a th:href="@{|/docs/lecture/${lecture.id}|}"><i class="bi bi-arrow-return-left pl-1"></i>返回正常页面</a>
+                <i class="bi bi-dot"></i>
+                <a th:href="@{|/docs/lecture/${lecture.id}/auto-translate|}">自动翻译<i class="bi bi-translate pl-1"></i></a>
+              </span>
+            </p>
+            <div class="js-toc-content mt-1">
+              <th:block th:each="block, stats: ${lecture.blocks}">
+                <p class="font-size-14"><span class="toc-hash" th:id="|id-block-${block.id}|" th:text="'区块#' + ${block.id}">区块#id</span></p>
+                <div class="row" th:id="|block-${block.id}|">
+                  <div class="col-md-6 content-editable" th:id="'lecture_blocks--content--' + ${block.id}" th:text="${block.content}">
+                    block.content
+                  </div>
+                  <div class="col-md-6 content-editable" th:id="'lecture_blocks--content_translation--' + ${block.id}" th:text="${block.contentTranslation}">
+                    block.content_translation
+                  </div>
+                </div>
+                <hr th:if="${!stats.last}">
+              </th:block>
+            </div>
+          </article>
+
+          <!-- toc -->
+          <aside class="col-lg-2 d-none d-lg-block aside-toc">
+            <div id="outline" class="js-toc toc sticky-top text-muted"></div>
+          </aside>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div id="css_content">
+    <link rel="stylesheet" href="/vendor/tocbot/dist/tocbot.css">
+    <link rel="stylesheet" href="/vendor/vditor/dist/index.css">
+    <style>
+      img {
+        max-width: 100%;
+      }
+    </style>
+  </div>
+
+  <div id="js_content">
+    <script src="/vendor/tocbot/dist/tocbot.js"></script>
+    <script type="module">
+      $(document).ready(function () {
+        tocbot.init({
+          // Where to render the table of contents.
+          tocSelector: '.js-toc',
+          // Where to grab the headings to build the table of contents.
+          contentSelector: '.js-toc-content',
+          // Which headings to grab inside of the contentSelector element.
+          headingSelector: '.toc-hash',
+          // For headings inside relative or absolute positioned containers within content.
+          hasInnerContainers: false,
+          collapseDepth: 6,
+        });
+        $(".js-toc a.toc-link").mouseover(function () {
+          $(this).attr('title', $(this).text());
+        });
+        $('.js-toc a.toc-link').on('click', function(e){
+          //store hash
+          const href = $(this).attr("href");
+          const hash = href.substr(href.indexOf("#"));
+          // animate
+          $(hash).animateCss('slow');
+          $(hash).animateCss('flash');
+        });
+      })
+    </script>
+    <script src="/vendor/vditor/dist/index.min.js" defer></script>
+    <script type="module">
+      $(function() {
+        // preview
+        let allContentEditableElement = $('.content-editable');
+        allContentEditableElement.each(function(index) {
+          Vditor.preview(this, $(this).text(),
+                  {
+                    cdn: '/vendor/vditor',
+                    theme: {
+                      path: '/vendor/vditor/dist/css/content-theme',
+                    }
+                  }
+          );
+        });
+
+        // edit
+        allContentEditableElement.on('click', function(e) {
+          let contentEditableElement = $(this);
+          contentEditableElement.addClass('p-0')
+
+          if (contentEditableElement.hasClass('vditor')) {
+            return
+          }
+
+          contentEditableElement.removeClass('vditor-reset');
+
+          let editorId = contentEditableElement.attr('id');
+          let height = contentEditableElement.height;
+          let vditor = new Vditor(editorId, {
+            mode: 'ir',
+            toolbar: [
+              "emoji",
+              "headings",
+              "bold",
+              "italic",
+              "strike",
+              "link",
+              "|",
+              "table",
+              "list",
+              "ordered-list",
+              "check",
+              "|",
+              "quote",
+              "line",
+              "code",
+              "inline-code",
+              "|",
+              "upload",
+              "|",
+              "fullscreen",
+            ],
+            toolbarConfig: {
+              pin: true,
+            },
+            height: height,
+            cdn: '/vendor/vditor',
+            cache: {
+              enable: false,
+            },
+            upload: {
+              url: '/backend/images/uploadFromVditor',
+              fieldName: 'image[]',
+              max: 10 * 1024 * 1024,
+              headers: {
+                'accept': 'application/json',
+              },
+              linkToImgUrl: '/backend/images/uploadLinkFromPasteToVditor',
+              linkToImgFormat: function (responseText) {
+                vditor.setValue(vditor.getValue().replace(JSON.parse(responseText).data.originalURL, JSON.parse(responseText).data.url));
+                /**
+                 * Uncaught SyntaxError: Unexpected token u in JSON at position 0
+                 * at JSON.parse (<anonymous>)
+                 * at XMLHttpRequest.i.onreadystatechange (index.min.js:27)
+                 */
+                // It may be a bug in vditor
+              }
+            },
+            fullscreen: {
+              index: 1080
+            },
+            esc (content) {
+              //console.log('用户按下了 ESC，Markdown 内容为：\n' + content)
+              contentEditableElement.removeClass('p-0');
+              vditor.destroy();
+            }
+          })
+        });
+      })
+    </script>
+  </div>
+</div>

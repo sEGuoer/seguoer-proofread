@@ -16,6 +16,7 @@
               <span th:text="${lecture.createdAt}"></span>
               <span> - </span>
               所属文档：<a th:href="@{'/docs/' + ${lecture.collection.id}}" th:text="${lecture.section.collection.title}">lecture.section.collection.title</a>
+              <a sec:authorize="hasRole('admin')" th:if="${lecture.blocks.size() > 0}" th:href="@{|/docs/lecture/${lecture.id}/proofread|}" class="float-right">校对<i class="bi bi-spellcheck pl-1"></i></a>
             </p>
             <div class="js-toc-content mt-1">
               <div id="vditor-preview-element">
