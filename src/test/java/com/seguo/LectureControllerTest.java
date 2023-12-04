@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -20,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -164,5 +169,123 @@ class LectureControllerTest {
         Assertions.assertTrue(co.isPresent());
         collectionRepository.delete(co.get());
     }
+
+    @Test
+    @WithMockUser(username="user",roles={"user"})
+    void showNotContainsString() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20"))
+                .andExpect(MockMvcResultMatchers.content().string(not(containsString("校对<i class=\"bi bi-spellcheck pl-1\"></i>"))))
+        ;
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"admin"})
+    void showContainsString() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20"))
+                .andExpect(MockMvcResultMatchers.content().string(containsString("校对<i class=\"bi bi-spellcheck pl-1\"></i>")))
+        ;
+    }
+
+    @Test
+    void showProofreadReturn3xxWithoutLogin() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20/proofread"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+        ;
+    }
+
+    @Test
+    @WithMockUser(username="not-admin",roles={"not-admin"})
+    void showProofreadReturnForbiddenWithoutAdminRole() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20/proofread"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+        ;
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"admin"})
+    void showProofreadWithAdminRole() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20/proofread"))
+                .andExpect(MockMvcResultMatchers.content().string(containsString("<i class=\"bi bi-arrow-return-left pl-1\"></i>返回正常页面")))
+                .andExpect(MockMvcResultMatchers.content().string(containsString("自动翻译<i class=\"bi bi-translate pl-1\"></i>")))
+        ;
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"admin"})
+    void autoTranslateBlocks() throws Exception {
+        long lectureId = 20L;
+        long blockId = 16L;
+
+        Block block = blockRepository.findById(blockId).orElseThrow();
+        String originContentTranslation = block.getContentTranslation();
+
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/" + lectureId + "/auto-translate"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/docs/lecture/" + lectureId + "/proofread"))
+        ;
+
+        block = blockRepository.findById(blockId).orElseThrow();
+        Assertions.assertNotNull(block.getContentTranslation());
+
+        // rollback
+        block.setContentTranslation(originContentTranslation);
+        blockRepository.save(block);
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"admin"})
+    void updateBlockWithContentColumn() throws Exception {
+        long collectionId = 2L;
+        long lectureId = 20L;
+        long blockId = 16L;
+
+        Block block = blockRepository.findById(blockId).orElseThrow();
+        String originContent = block.getContent();
+        String updatedContent = "content-column__updated";
+        mvc.perform(MockMvcRequestBuilders.put("/docs/lecture/block/proofread/update")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", blockId + "")
+                        .param("content", updatedContent)
+                        .param("lecture_id", lectureId + "")
+                        .param("collection_id", collectionId + "")
+                )
+                .andExpect(MockMvcResultMatchers.content().string(is("SUCCESS")))
+        ;
+
+        block = blockRepository.findById(blockId).orElseThrow();
+        Assertions.assertEquals(updatedContent, block.getContent());
+
+        // rollback
+        block.setContent(originContent);
+        blockRepository.save(block);
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"admin"})
+    void updateBlockWithContentTranslationColumn() throws Exception {
+        long collectionId = 2L;
+        long lectureId = 20L;
+        long blockId = 16L;
+
+        Block block = blockRepository.findById(blockId).orElseThrow();
+        String originContentTranslation = block.getContentTranslation();
+        String updatedContentTranslation = "contentTranslation-column__updated";
+        mvc.perform(MockMvcRequestBuilders.put("/docs/lecture/block/proofread/update")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", blockId + "")
+                        .param("contentTranslation", updatedContentTranslation)
+                        .param("lecture_id", lectureId + "")
+                        .param("collection_id", collectionId + "")
+                )
+                .andExpect(MockMvcResultMatchers.content().string(is("SUCCESS")))
+        ;
+
+        block = blockRepository.findById(blockId).orElseThrow();
+        Assertions.assertEquals(updatedContentTranslation, block.getContentTranslation());
+
+        // rollback
+        block.setContentTranslation(originContentTranslation);
+        blockRepository.save(block);
+    }
 }
+
 

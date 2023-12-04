@@ -26,11 +26,11 @@
               <th:block th:each="block, stats: ${lecture.blocks}">
                 <p class="font-size-14"><span class="toc-hash" th:id="|id-block-${block.id}|" th:text="'区块#' + ${block.id}">区块#id</span></p>
                 <div class="row" th:id="|block-${block.id}|">
-                  <div class="col-md-6 content-editable" th:id="'lecture_blocks--content--' + ${block.id}" th:text="${block.content}">
+                  <div class="col-md-6 content-editable" th:data-lecture_id="${lecture.id}" th:data-collection_id="${lecture.collection.id}" th:id="'lecture_blocks--content--' + ${block.id}" th:text="${block.content}">
                     block.content
                   </div>
-                  <div class="col-md-6 content-editable" th:id="'lecture_blocks--content_translation--' + ${block.id}" th:text="${block.contentTranslation}">
-                    block.content_translation
+                  <div class="col-md-6 content-editable" th:data-lecture_id="${lecture.id}" th:data-collection_id="${lecture.collection.id}" th:id="'lecture_blocks--contentTranslation--' + ${block.id}" th:text="${block.contentTranslation}">
+                    block.contentTranslation
                   </div>
                 </div>
                 <hr th:if="${!stats.last}">
@@ -169,6 +169,35 @@
             },
             esc (content) {
               //console.log('用户按下了 ESC，Markdown 内容为：\n' + content)
+              let split = editorId.split('--');
+              let blockColumnName = split[1];
+              let blockId = split[2];
+              let data = {};
+              data['id'] = blockId;
+              data[blockColumnName] = content;
+              data['lecture_id'] = contentEditableElement.data('lecture_id');
+              data['collection_id'] = contentEditableElement.data('collection_id');
+              if (confirm('Are you sure you want to edit? (block id=' + blockId + ')')) {
+                $.ajax({
+                  url: '/docs/lecture/block/proofread/update',
+                  data,
+                  type: "PUT",
+                })
+                        .done(function (response) {
+                          if ('SUCCESS' === response) {
+                            location.reload();
+                          } else {
+                            console.log(response);
+                            alert(response);
+                          }
+                        })
+                        .fail(function (xhr, status, errorThrown) {
+                          alert("Sorry, there was a problem!");
+                          console.log("Error: " + errorThrown);
+                          console.log("Status: " + status);
+                        })
+              }
+
               contentEditableElement.removeClass('p-0');
               vditor.destroy();
             }

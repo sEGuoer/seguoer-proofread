@@ -29,6 +29,14 @@ public class BlockServiceImpl implements BlockService {
             block.setCreatedAt(LocalDateTime.now());
         }
 
+        if (blockDto.getContent() != null) {
+            block.setContent(blockDto.getContent());
+        }
+
+        if (blockDto.getContentTranslation() != null) {
+            block.setContentTranslation(blockDto.getContentTranslation());
+        }
+
         block.setContent(blockDto.getContent());
         block.setPublished(blockDto.isPublished());
         block.setSortOrder(blockDto.getSortOrder());
