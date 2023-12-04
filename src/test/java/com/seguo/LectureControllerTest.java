@@ -286,6 +286,38 @@ class LectureControllerTest {
         block.setContentTranslation(originContentTranslation);
         blockRepository.save(block);
     }
+
+    @Test
+    void showLectureWithCtParam() throws Exception {
+        long blockId = 16L;
+        Block block = blockRepository.findById(blockId).orElseThrow();
+
+        String ctParam = "c";
+        String expected = getExpectedString(block, ctParam);
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20?ct=" + ctParam))
+                .andExpect(MockMvcResultMatchers.model().attribute("content", expected))
+        ;
+
+        ctParam = "t";
+        expected = getExpectedString(block, "t");
+        mvc.perform(MockMvcRequestBuilders.get("/docs/lecture/20?ct=" + ctParam))
+                .andExpect(MockMvcResultMatchers.model().attribute("content", expected))
+        ;
+    }
+
+    private String getExpectedString(Block block, String ctParam) {
+        Lecture lecture = block.getLecture();
+
+        StringBuilder allBlocks = new StringBuilder();
+        for (Block b : lecture.getBlocks()) {
+            String bc = "t".equals(ctParam) ? b.getContentTranslation() : b.getContent();
+            if (bc != null) {
+                allBlocks.append(bc).append(System.lineSeparator());
+            }
+        }
+
+        return allBlocks.toString();
+    }
 }
 
 
